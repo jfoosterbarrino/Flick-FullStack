@@ -26,7 +26,7 @@ export default function Banner() {
                 const request = await axios.get(requests.trendingMovies)
 
                 setMovie(request.data.results[
-                    Math.floor(Math.random()*request.data.results.length-1)
+                    Math.floor(Math.random()*request.data.results?.length-1)
                 ]
                 );
                 return request;
