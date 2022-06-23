@@ -9,7 +9,8 @@ import os
 login = LoginManager()
 db = SQLAlchemy()
 migrate = Migrate()
-cors = CORS()
+if os.environ.get('FLASK_ENV') == 'development':
+    cors = CORS()
 
 def create_app(config_class = Config):
     app = Flask(__name__, static_folder='../client/build', static_url_path ="")
@@ -18,7 +19,8 @@ def create_app(config_class = Config):
     login.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
-    cors.init_app(app)
+    if os.environ.get('FLASK_ENV') == 'development':
+        cors.init_app(app)
 
     @app.route('/')
     def serve():
