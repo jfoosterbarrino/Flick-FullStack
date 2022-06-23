@@ -13,7 +13,7 @@ if os.environ.get('FLASK_ENV') == 'development':
     cors = CORS()
 
 def create_app(config_class = Config):
-    app = Flask(__name__, static_folder='../client/build', static_url_path ="")
+    app = Flask(__name__)
     app.config.from_object(config_class)
 
     login.init_app(app)
@@ -22,13 +22,15 @@ def create_app(config_class = Config):
     if os.environ.get('FLASK_ENV') == 'development':
         cors.init_app(app)
 
-    @app.route('/')
-    def serve():
-        return send_from_directory(app.static_folder, 'index.html')
+    # , static_folder='../client/build', static_url_path =""
 
-    @app.errorhandler(404)
-    def not_found(e):
-        return app.send_static_file('index.html')
+    # @app.route('/')
+    # def serve():
+    #     return send_from_directory(app.static_folder, 'index.html')
+
+    # @app.errorhandler(404)
+    # def not_found(e):
+    #     return app.send_static_file('index.html')
 
     from .blueprints.api import bp as api_bp
     app.register_blueprint(api_bp)
