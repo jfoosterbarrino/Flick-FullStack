@@ -1,0 +1,13 @@
+.genre-card{
+    margin-left: -5em;
+    transition: .5s ease-in;
+    border-radius: 5px;
+    margin-top:100px;
+    width:250px;
+}
+
+.genre-card:hover{
+    margin-left: -1em;
+    transform: translateY(-50px) translateX(-50px);
+    z-index:1;
+}

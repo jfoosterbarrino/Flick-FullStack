@@ -1,0 +1,52 @@
+.row_posters{
+    display:flex;
+    overflow-y:hidden;
+    overflow-x:scroll;
+    padding: 20px;
+    margin-bottom:35px;
+}
+
+
+.row_posters::-webkit-scrollbar{
+    display:none;
+}
+
+.row_poster{
+    object-fit: contain;
+    width:100%;
+    max-height:250px;
+    transition: transform 450ms;
+    margin-right:15px;
+    border-radius: 15px;
+}
+
+.row_poster:hover{
+    transform: scale(1.09);
+}
+
+.row{
+    margin-left:20px;
+    margin-right:20px;
+}
+
+.genre{
+    
+    margin-bottom: 5px;
+    margin-left:20px;
+    color:white;
+    mix-blend-mode: screen;
+}
+
+.watchlist-bg{
+    background-color: #081a36;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    margin-bottom:30px;
+}
+
+
+
+
+
+
+

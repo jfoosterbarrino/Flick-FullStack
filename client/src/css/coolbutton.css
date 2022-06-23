@@ -1,0 +1,239 @@
+.cool-button{
+    width: 120px;
+    height:60px;
+    border: 2px solid #c89ece;
+    border-radius: 10px;
+    background-color: transparent;
+    color: #c89ece;
+    cursor: pointer;
+    position: relative;
+    font-family:"Lora", serif;
+}
+
+.cool-button:hover{
+    background-color: #c89ece;
+    color: white;
+    transition: 1s ease;
+}
+
+.cool-button::before{
+    content: "";
+    position: absolute;
+    left:0;
+    top:50px;
+    background: transparent;
+    height: 50%;
+    width: 100%;
+    transform: perspective(1em) rotateX(40deg) scale(1,.35);
+    filter: blur(8px);
+    transition: 1s ease;
+}
+
+.cool-button:hover::before{
+    background: #c89ece;
+    top: 70px;
+}
+
+
+
+
+.purp-button{
+    width: 120px;
+    height:60px;
+    border: 2px solid #9066a3;
+    border-radius: 10px;
+    background-color: transparent;
+    color: #9066a3;
+    cursor: pointer;
+    position: relative;
+    font-family:"Lora", serif;
+}
+
+.purp-button:hover{
+    background-color: #9066a3;
+    color: white;
+    transition: 1s ease;
+}
+
+.purp-button::before{
+    content: "";
+    position: absolute;
+    left:0;
+    top:50px;
+    background: transparent;
+    height: 50%;
+    width: 100%;
+    transform: perspective(1em) rotateX(40deg) scale(1,.35);
+    filter: blur(8px);
+    transition: 1s ease;
+}
+
+.purp-button:hover::before{
+    background: #9066a3;
+    top: 70px;
+}
+
+
+
+
+
+
+.blue-button{
+    width: 120px;
+    height:60px;
+    border: 2px solid #6371a8;
+    border-radius: 10px;
+    background-color: transparent;
+    color: #6371a8;
+    cursor: pointer;
+    position: relative;
+    font-family:"Lora", serif;
+}
+
+.blue-button:hover{
+    background-color: #6371a8;
+    color: white;
+    transition: 1s ease;
+}
+
+.blue-button::before{
+    content: "";
+    position: absolute;
+    left:0;
+    top:50px;
+    background: transparent;
+    height: 50%;
+    width: 100%;
+    transform: perspective(1em) rotateX(40deg) scale(1,.35);
+    filter: blur(8px);
+    transition: 1s ease;
+}
+
+.blue-button:hover::before{
+    background: #6371a8;
+    top: 70px;
+}
+
+
+
+
+
+
+.red-button{
+    width: 120px;
+    height:60px;
+    border: 2px solid #bf3939;
+    border-radius: 10px;
+    background-color: transparent;
+    color: #bf3939;
+    cursor: pointer;
+    position: relative;
+    font-family:"Lora", serif;
+}
+
+.red-button:hover{
+    background-color: #bf3939;
+    color: white;
+    transition: 1s ease;
+}
+
+.red-button::before{
+    content: "";
+    position: absolute;
+    left:0;
+    top:50px;
+    background: transparent;
+    height: 50%;
+    width: 100%;
+    transform: perspective(1em) rotateX(40deg) scale(1,.35);
+    filter: blur(8px);
+    transition: 1s ease;
+}
+
+.red-button:hover::before{
+    background: #bf3939;
+    top: 70px;
+}
+
+
+
+
+
+
+.dark-button{
+    width: 120px;
+    height:60px;
+    border: 2px solid #081a36;
+    border-radius: 10px;
+    background-color: #081a36;
+    color: white;
+    cursor: pointer;
+    position: relative;
+    font-family:"Lora", serif;
+}
+
+.dark-button:hover{
+    background-color: #9066a3;
+    color: white;
+    border: 2px solid #9066a3;
+    transition: 1s ease;
+}
+
+.dark-button::before{
+    content: "";
+    position: absolute;
+    left:0;
+    top:50px;
+    background: transparent;
+    height: 50%;
+    width: 100%;
+    transform: perspective(1em) rotateX(40deg) scale(1,.35);
+    filter: blur(8px);
+    transition: 1s ease;
+}
+
+.dark-button:hover::before{
+    background: #9066a3;
+    top: 70px;
+}
+
+
+
+
+
+
+.white-button{
+    width: 120px;
+    height:60px;
+    border: 2px solid white;
+    border-radius: 10px;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    position: relative;
+    font-family:"Lora", serif;
+}
+
+.white-button:hover{
+    background-color: white;
+    color: #081a36;
+    transition: 1s ease;
+}
+
+.white-button::before{
+    content: "";
+    position: absolute;
+    left:0;
+    top:50px;
+    background: transparent;
+    height: 50%;
+    width: 100%;
+    transform: perspective(1em) rotateX(40deg) scale(1,.35);
+    filter: blur(8px);
+    transition: 1s ease;
+}
+
+.white-button:hover::before{
+    background: white;
+    top: 70px;
+}
