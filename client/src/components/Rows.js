@@ -47,13 +47,12 @@ export default function Rows() {
     console.log(watchList)
 
     useEffect(()=>{
-        for(let film of watchList){
-          if(film?.tmdb_id === movieForButton?.id){
-            return setInList(true)
-          }
+      for(let film of watchList){
+        if(film?.tmdb_id === movieForButton?.id || film?.id === movieForButton?.id){
+          setInList(true)
         }
-        setInList(false)
-    },[movieForButton, watchList])
+      }
+  },[movieForButton])
 
     const handleRemove=(movieForButton)=>{
             removeMovie(movieForButton)
@@ -165,6 +164,9 @@ export default function Rows() {
       }
     }
 
+
+
+
   return (<>
   
   <div className="watchlist-bg">
@@ -177,7 +179,7 @@ export default function Rows() {
               <img 
                   className ="row_poster"
                   key = {movie.id} 
-                  onClick={()=>handleClick(movie)}
+                  onClick= {()=>navigate(`/moviecollection/${movie.tmdb_id}`)}
                   src={`${baseUrl}${movie.poster_path}`} 
                   alt={movie.title}
                   />
@@ -227,7 +229,7 @@ export default function Rows() {
   <div className="trailer-content">
   {inList? <PurpButton onClick={()=>handleRemove(movieForButton)}>Remove From List</PurpButton>:<PurpButton onClick={()=>handleAdd(movieForButton)}>Add to Watch List</PurpButton>}
   <h1 className="trailer-title">{movieForButton?.title} Trailer</h1>
-  <BlueButton onClick={()=>navigate('/moviecollection/'+movieForButton.id)}>More Info</BlueButton>
+  {movieForButton?.tmdb_id ? <BlueButton onClick={()=>navigate('/moviecollection/'+movieForButton.tmdb_id)}>More Info</BlueButton> : <BlueButton onClick={()=>navigate('/moviecollection/'+movieForButton.id)}>More Info</BlueButton>}
   </div>
   <Youtube videoId = {trailerUrl} opts={opts}/>
   </>

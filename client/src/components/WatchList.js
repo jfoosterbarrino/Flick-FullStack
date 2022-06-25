@@ -24,6 +24,7 @@ export default function WatchList() {
     const handleClear=() => {
       clearList()
       setAlert({msg:"Watch List has been cleared",color:"primary"})
+      window.location.reload(false);
       const source=CancelToken.source();
       const dropMovies=async()=>{
           const response = await apiMovie.removeAllWl(user.token, source.token)
@@ -35,9 +36,10 @@ export default function WatchList() {
     const handleRemove=(movie)=>{
       removeMovie(movie)
       setAlert({msg:`${movie.title} has been removed from your list`,color:"primary"})
+      window.location.reload(false);
       const source=CancelToken.source();
       const dropMovie=async()=>{
-          const response = await apiMovie.removeMovieFromWl(user.token, movie.id, source.token)
+          const response = await apiMovie.removeMovieFromWl(user.token, movie.tmdb_id, source.token)
       }
       dropMovie()
       return ()=>{source.cancel();}

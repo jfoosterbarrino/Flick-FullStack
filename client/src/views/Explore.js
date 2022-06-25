@@ -18,6 +18,7 @@ import WhiteButton from '../components/WhiteButton';
 import { useEffect } from 'react';
 import {CancelToken} from 'apisauce';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import useWlByUser from '../hooks/useWlByUser';
 
 
   const baseUrl = "https://image.tmdb.org/t/p/original/";
@@ -28,6 +29,7 @@ export default function Explore() {
     const users = useUsers()
     const {user, recUser, setRecUser, setAlert} = useContext(AppContext)
     const myMovies = useMoviesByUser(user.id)
+    const watchList = useWlByUser(user.id)
     const {removeRecommend, clearRecommend, addMovie} = useContext(MovieContext)
     const navigate = useNavigate()
     const [recList, setRecList] = useState(myMovies)
@@ -37,6 +39,7 @@ export default function Explore() {
     const handleClearRecommend=() => {
         clearRecommend()
         setAlert({msg:"Recommend List has been cleared",color:"primary"})
+        window.location.reload(false);
         const source=CancelToken.source();
         const removeMovies=async()=>{
             const response = await apiMovie.removeAllMovies(user.token, source.token)
@@ -49,18 +52,14 @@ export default function Explore() {
     const handleRemoveRecommend=(movie)=>{
         removeRecommend(movie)
         setAlert({msg:`${movie.title} has been removed from your Recommend List`,color:"primary"})
+        window.location.reload(false);
         const source=CancelToken.source();
         const removeMovie=async()=>{
             const response = await apiMovie.removeMovieFromUser(user.token, movie.tmdb_id, source.token)
-            console.log(response)
-            if (response){
-                setAlert({msg: `Recommend It List Updated and Saved`, color: "background"})
-            }else if(response === false && response !== undefined){
-                setAlert({msg: `That movie wasn't in your list`, color: "error"})
-            }
         }
         removeMovie()
         return ()=>{source.cancel();}
+        
       }
 
       const handleAdd=(movie)=>{
@@ -68,7 +67,7 @@ export default function Explore() {
         setAlert({msg:`${movie.title} has been added to your Watch List`,color: "primary"})
         const source=CancelToken.source();
         const createMovie=async()=>{
-            const response = await apiMovie.postMovieToWl(user.token, movie.id, source.token)
+            const response = await apiMovie.postMovieToWl(user.token, movie.tmdb_id, source.token)
             console.log(response)
             if (response){
                 setAlert({msg: `Watch List Updated and Saved`, color: "background"})
@@ -91,7 +90,7 @@ export default function Explore() {
             showMovies()
             return ()=>{source.cancel();}
         },
-        [recUser, setRecUser, user.token]
+        [recUser, setRecUser, user.token, watchList]
     )
 
       useEffect(

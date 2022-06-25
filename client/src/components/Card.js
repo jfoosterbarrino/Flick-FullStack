@@ -26,8 +26,6 @@ import apiMovie from '../api/apiMovie';
 import {CancelToken} from 'apisauce';
 import useMoviesByUser from '../hooks/useMoviesByUser';
 import useWlByUser from '../hooks/useWlByUser';
-import Progress from './Progress'
-
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -47,7 +45,6 @@ export default function FullWidthGrid() {
     const providers = useProvidersByMovie(movieId)
     const reviews = useReviewsByMovie(movieId)
     
-    console.log(cast)
 
 
     const [trailerUrl, setTrailerUrl] = useState("")
@@ -59,6 +56,9 @@ export default function FullWidthGrid() {
     const recommendList = useMoviesByUser(user?.id)
     const watchList = useWlByUser(user?.id)
     const streaming =providers?.flatrate?.concat(providers.buy, providers.rent)
+    
+
+  
     
     useEffect(()=>{
         for(let film of watchList){
@@ -90,7 +90,7 @@ export default function FullWidthGrid() {
         setInList(!inList)
         const source=CancelToken.source();
         const dropMovie=async()=>{
-            const response = await apiMovie.removeMovieFromWl(user.token, movieId, source.token)
+            const response = await apiMovie.removeMovieFromWl(user.token, movie.id, source.token)
         }
         dropMovie()
         return ()=>{source.cancel();}
@@ -101,7 +101,7 @@ export default function FullWidthGrid() {
         setInList(!inList)
         const source=CancelToken.source();
         const createMovie=async()=>{
-            const response = await apiMovie.postMovieToWl(user.token, movieId, source.token)
+            const response = await apiMovie.postMovieToWl(user.token, movie.id, source.token)
         }
         createMovie()
         return ()=>{source.cancel();}
@@ -112,10 +112,10 @@ export default function FullWidthGrid() {
         setAlert({msg:`${movie.title} has been removed from your Recommend It List`,color:"primary"})
         setInRecommend(!inRecommend)
         const source=CancelToken.source();
-        const removeMovie=async()=>{
+        const rmMovie=async()=>{
             const response = await apiMovie.removeMovieFromUser(user.token, movie.id, source.token)
         }
-        removeMovie()
+        rmMovie()
         return ()=>{source.cancel();}
 
 
@@ -125,10 +125,10 @@ export default function FullWidthGrid() {
         setAlert({msg:`${movie.title} has been added to your Recommend It List`,color:"primary"})
         setInRecommend(!inRecommend)
         const source=CancelToken.source();
-        const createMovie=async()=>{
+        const makeMovie=async()=>{
             const response = await apiMovie.postMovieToUser(user.token, movie.id, source.token)
         }
-        createMovie()
+        makeMovie()
         return ()=>{source.cancel();}
     }
 
@@ -144,14 +144,6 @@ export default function FullWidthGrid() {
       }
     }
 
-    
-    if(!movie){
-      return(
-      <Box sx={{display:"flex"}}>
-        <Progress/>
-      </Box>
-      )
-    }
 
 
     return (
@@ -176,7 +168,7 @@ export default function FullWidthGrid() {
             
           {reviews?.map(review=>(
             
-            <Review review={review}/>
+            <Review key={review.id} review={review}/>
             
           ))}
       
