@@ -11,14 +11,15 @@ import {AppContext} from '../context/AppContext';
 import Avatar from '@mui/material/Avatar';
 import useMoviesByUser from '../hooks/useMoviesByUser';
 import {Link} from 'react-router-dom';
+import useWlByUser from '../hooks/useWlByUser';
 
 
 export default function MyAccount({user}) {
     const [content, setContent] = useState(<></>);
     const [open, setOpen] = useState(false)
-    const {watchList} = useContext(MovieContext)
     const recommendList = useMoviesByUser(user.id)
     const {setWatch, setRecommend, setHome, setSearch, setPopular, setGenre, setAdmin} = useContext(AppContext)
+    const watchList =useWlByUser(user.id)
 
     const handleClose=()=>{
       setContent(<></>)

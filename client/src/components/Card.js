@@ -25,6 +25,8 @@ import Link from '@mui/material/Link';
 import apiMovie from '../api/apiMovie';
 import {CancelToken} from 'apisauce';
 import useMoviesByUser from '../hooks/useMoviesByUser';
+import useWlByUser from '../hooks/useWlByUser';
+import Progress from './Progress'
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -44,32 +46,31 @@ export default function FullWidthGrid() {
     const cast = useCastByMovie(movieId)
     const providers = useProvidersByMovie(movieId)
     const reviews = useReviewsByMovie(movieId)
+    
     console.log(cast)
 
 
     const [trailerUrl, setTrailerUrl] = useState("")
 
-    const {watchList, addMovie, removeMovie, addRecommend, removeRecommend} = useContext(MovieContext)
+    const {addMovie, removeMovie, addRecommend, removeRecommend} = useContext(MovieContext)
     const [inList, setInList] = useState(false)
     const [inRecommend, setInRecommend] = useState(false)
     const {setAlert, user} = useContext(AppContext)
-    const recommendList = useMoviesByUser(user.id)
-
+    const recommendList = useMoviesByUser(user?.id)
+    const watchList = useWlByUser(user?.id)
     const streaming =providers?.flatrate?.concat(providers.buy, providers.rent)
     
     useEffect(()=>{
-        let newList = watchList.slice()
-        for(let film of newList){
-          if(film.id === movie.id){
+        for(let film of watchList){
+          if(film?.tmdb_id === movie?.id){
             setInList(true)
           }
         }
     },[movie])
     
     useEffect(()=>{
-        let sliceList = recommendList.slice()
-        for(let picture of sliceList){
-          if(picture.tmdb_id === movie.id){
+        for(let picture of recommendList){
+          if(picture?.tmdb_id === movie?.id){
             setInRecommend(true)
           }
         }
@@ -87,11 +88,23 @@ export default function FullWidthGrid() {
         removeMovie(movie)
         setAlert({msg:`${movie.title} has been removed from your Watch List`,color:"primary"})
         setInList(!inList)
+        const source=CancelToken.source();
+        const dropMovie=async()=>{
+            const response = await apiMovie.removeMovieFromWl(user.token, movieId, source.token)
+        }
+        dropMovie()
+        return ()=>{source.cancel();}
     }
     const handleAdd=(movie)=>{
         addMovie(movie)
         setAlert({msg:`${movie.title} has been added to your Watch List`,color:"primary"})
         setInList(!inList)
+        const source=CancelToken.source();
+        const createMovie=async()=>{
+            const response = await apiMovie.postMovieToWl(user.token, movieId, source.token)
+        }
+        createMovie()
+        return ()=>{source.cancel();}
     }
 
     const handleRemoveRecommend=(movie)=>{
@@ -101,12 +114,6 @@ export default function FullWidthGrid() {
         const source=CancelToken.source();
         const removeMovie=async()=>{
             const response = await apiMovie.removeMovieFromUser(user.token, movie.id, source.token)
-            console.log(response)
-            if (response){
-                setAlert({msg: `Recommend It List Updated and Saved`, color: "background"})
-            }else if(response === false && response !== undefined){
-                setAlert({msg: `That movie wasn't in your list`, color: "error"})
-            }
         }
         removeMovie()
         return ()=>{source.cancel();}
@@ -120,12 +127,6 @@ export default function FullWidthGrid() {
         const source=CancelToken.source();
         const createMovie=async()=>{
             const response = await apiMovie.postMovieToUser(user.token, movie.id, source.token)
-            console.log(response)
-            if (response){
-                setAlert({msg: `Recommend It List Updated and Saved`, color: "background"})
-            }else if(response === false && response !== undefined){
-                setAlert({msg: `You already have this movie`, color: "error"})
-            }
         }
         createMovie()
         return ()=>{source.cancel();}
@@ -143,7 +144,16 @@ export default function FullWidthGrid() {
       }
     }
 
-console.log(movie)
+    
+    if(!movie){
+      return(
+      <Box sx={{display:"flex"}}>
+        <Progress/>
+      </Box>
+      )
+    }
+
+
     return (
     <Box sx={{ flexGrow: 1, p:20, background:"radial-gradient(ellipse at bottom, #6371a8 0%, #081a36 100%)" }}>
       <Grid container spacing={20}>
@@ -151,15 +161,15 @@ console.log(movie)
         
             <div className="card"> 
                 <img 
-                    src={`${baseUrl}${movie.poster_path}`} 
-                    alt={movie.title}
+                    src={`${baseUrl}${movie?.poster_path}`} 
+                    alt={movie?.title}
                 />
                 <div className="con-text">
                     <br/>
-                <h2>{movie.title}</h2>
+                <h2>{movie?.title}</h2>
                 <br/>
                 <p>
-                    {movie.overview}
+                    {movie?.overview}
                 </p>
                 </div>
             </div>
@@ -175,29 +185,29 @@ console.log(movie)
 
     <Box sx={{ width: '100%', backgroundColor:"transparent"}}>
       <Stack spacing={2}>
-        <Item>{trailerUrl ? <Youtube videoId = {trailerUrl} opts={opts}/>:<img alt="" className="backdrop" src = {`${baseUrl}${movie.backdrop_path}`}/>}
+        <Item>{trailerUrl ? <Youtube videoId = {trailerUrl} opts={opts}/>:<img alt="" className="backdrop" src = {`${baseUrl}${movie?.backdrop_path}`}/>}
           
 
         </Item>
         <Item sx={{pb:2, p:2, pr:5, pl:5}}>
 <Typography sx={{color:"#081a36", fontFamily:"Lora, serif;"}}>
-          <h1>{movie.title}</h1>
+          <h1>{movie?.title}</h1>
           <br/>
           <p>
-                    {movie.overview}
+                    {movie?.overview}
                     <br/>
                     <br/>
           
           <Rating movie={movie}/>
           
           <br/>          
-                    Home Page: <Link href={movie.homepage}>{movie.homepage}</Link>
+                    Home Page: <Link href={movie?.homepage}>{movie?.homepage}</Link>
                     <br/>
-                    Duration: {movie.runtime} minutes
+                    Duration: {movie?.runtime} minutes
                     <br/>
-                    Release Date: {movie.release_date}
+                    Release Date: {movie?.release_date}
                     <br/>
-                    Rating: {movie.vote_average}/10
+                    Rating: {movie?.vote_average}/10
                 </p>
 </Typography>
 

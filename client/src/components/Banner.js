@@ -1,43 +1,41 @@
 import React, { useEffect, useContext, useState } from 'react';
 import {MovieContext} from '../context/MovieContext';
 import {AppContext} from '../context/AppContext';
-import requests from '../api/requests'
-import axios from '../api/axios'
 import '../css/banner.css'
 import WhiteButton from './WhiteButton'
-import {Link} from 'react-router-dom'
 import {useNavigate} from 'react-router-dom'
 import Box from '@mui/material/Box';
 import Progress from './Progress';
-import Tooltip from '@mui/material/Tooltip';
-
-const baseUrl = "https://image.tmdb.org/t/p/original/";
+import {CancelToken} from 'apisauce';
+import apiMovie from '../api/apiMovie';
+import useWlByUser from '../hooks/useWlByUser';
 
 
 export default function Banner() {
     const [movie, setMovie] = useState()
     const navigate = useNavigate()
-    const {addMovie, watchList, removeMovie} = useContext(MovieContext)
+    const {addMovie, removeMovie} = useContext(MovieContext)
     const [inList, setInList] = useState(false)
-    const {setAlert} = useContext(AppContext)
+    const {user, setAlert} = useContext(AppContext)
+    const watchList = useWlByUser(user.id)
     
     useEffect(()=>{
-            async function getMovie(){
-                const request = await axios.get(requests.trendingMovies)
+            const source=CancelToken.source();
+            const getMovie=async()=>{
+                const request = await apiMovie.getTrending(user.token, source.token)
 
-                setMovie(request.data.results[
-                    Math.floor(Math.random()*request.data.results?.length-1)
+                setMovie(request.data?.data.results[
+                    Math.floor(Math.random()*request.data?.data.results.length-1)
                 ]
                 );
                 return request;
             }
             getMovie();
-        },[]);
+        },[user.token]);
 
     useEffect(()=>{
-        let newList = watchList.slice()
-        for(let film of newList){
-          if(film?.id === movie?.id){
+        for(let film of watchList){
+          if(film?.tmdb_id === movie?.id){
             setInList(true)
           }
         }
@@ -47,12 +45,25 @@ export default function Banner() {
             removeMovie(movie)
             setAlert({msg:`${movie.title} has been removed from your list`,color:"primary"})
             setInList(!inList)
+            const source=CancelToken.source();
+            const removeMovie=async()=>{
+                const response = await apiMovie.removeMovieFromWl(user.token, movie.id, source.token)
+
+            }
+            removeMovie()
+            return ()=>{source.cancel();}
         }
 
     const handleAdd=(movie)=>{
         addMovie(movie)
         setAlert({msg:`${movie.title} has been added to your list`,color:"primary"})
         setInList(!inList)
+        const source=CancelToken.source();
+        const createMovie=async()=>{
+            const response = await apiMovie.postMovieToWl(user.token, movie.id, source.token)
+        }
+        createMovie()
+        return ()=>{source.cancel();}
     }
 
     if(!movie){

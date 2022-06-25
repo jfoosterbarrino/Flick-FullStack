@@ -18,14 +18,17 @@ import PurpButton from './PurpButton';
 import {useNavigate} from 'react-router-dom'
 import Box from '@mui/material/Box';
 import Progress from './Progress';
+import apiMovie from '../api/apiMovie';
+import {CancelToken} from 'apisauce';
+import useWlByUser from '../hooks/useWlByUser';
 
 const baseUrl = "https://image.tmdb.org/t/p/original/";
 
 export default function Rows() {
 
-    const {topRated, setTopRated, trending, setTrending, genres, setGenres, action, 
+    const {topRated, setTopRated, trending, setTrending, action, 
       setAction, comedy, setComedy, horror, setHorror, drama, setDrama, sciFi, setSciFi,
-      romance,setRomance, addMovie, removeMovie, watchList} = useContext(MovieContext)
+      romance,setRomance, addMovie, removeMovie} = useContext(MovieContext)
     setTopRated(useTopRated())
     setTrending(useTrending())
     setAction(useAction())
@@ -34,19 +37,18 @@ export default function Rows() {
     setHorror(useHorror())
     setSciFi(useSciFi())
     setRomance(useRomance())
-    setGenres(useGenres())
-    console.log(genres)
 
     const [trailerUrl, setTrailerUrl] = useState("")
     const [movieForButton, setMovieForButton] = useState({})
     const navigate = useNavigate()
     const [inList, setInList] = useState(false)
-    const {setAlert} = useContext(AppContext)
+    const {user, setAlert} = useContext(AppContext)
+    const watchList = useWlByUser(user.id)
+    console.log(watchList)
 
     useEffect(()=>{
-        let newList = watchList.slice()
-        for(let film of newList){
-          if(film.id === movieForButton.id){
+        for(let film of watchList){
+          if(film?.tmdb_id === movieForButton?.id){
             return setInList(true)
           }
         }
@@ -57,12 +59,24 @@ export default function Rows() {
             removeMovie(movieForButton)
             setAlert({msg:`${movieForButton.title} has been removed from your list`,color:"primary"})
             setInList(!inList)
+            const source=CancelToken.source();
+            const dropMovie=async()=>{
+                const response = await apiMovie.removeMovieFromWl(user.token, movieForButton.id, source.token)
+            }
+            dropMovie()
+            return ()=>{source.cancel();}
         }
 
     const handleAdd=(movieForButton)=>{
         addMovie(movieForButton)
         setAlert({msg:`${movieForButton.title} has been added to your list`,color:"primary"})
         setInList(!inList)
+        const source=CancelToken.source();
+        const createMovie=async()=>{
+            const response = await apiMovie.postMovieToWl(user.token, movieForButton.id, source.token)
+        }
+        createMovie()
+        return ()=>{source.cancel();}
     }
 
     if(!watchList){
@@ -213,7 +227,7 @@ export default function Rows() {
   <div className="trailer-content">
   {inList? <PurpButton onClick={()=>handleRemove(movieForButton)}>Remove From List</PurpButton>:<PurpButton onClick={()=>handleAdd(movieForButton)}>Add to Watch List</PurpButton>}
   <h1 className="trailer-title">{movieForButton?.title} Trailer</h1>
-  <BlueButton onClick={()=>navigate('/moviecollection/'+movieForButton?.id)}>More Info</BlueButton>
+  <BlueButton onClick={()=>navigate('/moviecollection/'+movieForButton.id)}>More Info</BlueButton>
   </div>
   <Youtube videoId = {trailerUrl} opts={opts}/>
   </>

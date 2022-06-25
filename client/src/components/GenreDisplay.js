@@ -27,8 +27,8 @@ export default function OutlinedCard() {
 
               <Box style={{display:"flex", flexDirection:"row", paddingBottom:30, justifyContent:"center"}}>
 
-                {genres?.slice(0,6).map(genre =>(
-          <Box className="genre-card" onClick={()=>navigate(`/genres/${genre.name}/${genre.id}`)}>
+                {genres.slice(0,6).map(genre =>(
+          <Box key ={genre.id} className="genre-card" onClick={()=>navigate(`/genres/${genre.name}/${genre.id}`)}>
             <Card variant="outlined" sx={{pb:15, pt:15, borderRadius:5, background:"url(https://res.cloudinary.com/dccf9vnoo/image/upload/v1655518690/frefr_ld4tzt.jpg)", backgroundSize:"cover", backgroundRepeat: "no-repeat"}}>
 
         
@@ -46,8 +46,8 @@ export default function OutlinedCard() {
 
         <Box style={{display:"flex", flexDirection:"row", paddingBottom:30, justifyContent:"center"}}>
 
-{genres?.slice(6,13).map(genre =>(
-  <Box className="genre-card" onClick={()=>navigate(`/genres/${genre.name}/${genre.id}`)}>
+{genres.slice(6,13).map(genre =>(
+  <Box key ={genre.id} className="genre-card" onClick={()=>navigate(`/genres/${genre.name}/${genre.id}`)}>
 <Card variant="outlined" sx={{pb:15, pt:15, borderRadius:5, background:"url(https://res.cloudinary.com/dccf9vnoo/image/upload/v1655518690/frefr_ld4tzt.jpg)", backgroundSize:"cover", backgroundRepeat: "no-repeat"}}>
 
 
@@ -66,8 +66,8 @@ export default function OutlinedCard() {
 
         <Box style={{display:"flex", flexDirection:"row", paddingBottom:30, justifyContent:"center"}}>
 
-{genres?.slice(13,19).map(genre =>(
-  <Box className="genre-card" onClick={()=>navigate(`/genres/${genre.name}/${genre.id}`)}>
+{genres.slice(13,19).map(genre =>(
+  <Box key ={genre.id} className="genre-card" onClick={()=>navigate(`/genres/${genre.name}/${genre.id}`)}>
 <Card variant="outlined" sx={{pb:15, pt:15, borderRadius:5, background:"url(https://res.cloudinary.com/dccf9vnoo/image/upload/v1655518690/frefr_ld4tzt.jpg)", backgroundSize:"cover", backgroundRepeat: "no-repeat"}}>
 
 

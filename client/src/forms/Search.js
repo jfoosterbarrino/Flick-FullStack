@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import Typography from '@mui/material/Typography'
 import apiMovie from '../api/apiMovie';
 import TextField from '@mui/material/TextField';
@@ -6,6 +6,8 @@ import '../css/card.css'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box';
 import {useNavigate} from 'react-router-dom';
+import {AppContext} from '../context/AppContext';
+import {CancelToken} from 'apisauce';
 
 const baseUrl = "https://image.tmdb.org/t/p/original/";
 
@@ -13,15 +15,17 @@ export default function Search() {
     const [search, setSearch] = useState("")
     const [searchResults, setSearchResults] = useState([])
     const navigate = useNavigate()
+    const {user} =useContext(AppContext)
 
 
     useEffect(()=>{
+      const source = CancelToken.source()
       const showMovies=async()=>{
-        const response = await apiMovie.getMoviesBySearch(search)
-        setSearchResults(response)
+        const response = await apiMovie.getMoviesBySearch(user.token, search, source.token)
+        setSearchResults(response.data?.data?.results)
     }
     showMovies()
-    },[search])
+    },[search, user.token])
 
     const handleChange=event=>{
       setSearch(event.target.value)
@@ -48,7 +52,7 @@ console.log(search)
 <Grid container spacing={2}>
 
 {searchResults?.map(movie=>movie.poster_path?(
-  <Grid item xs={6} sm={4} md={4} lg={3} xl={3}sx={{display: 'flex',justifyContent: 'center', mt:8}}>
+  <Grid key={movie.id} item xs={6} sm={4} md={4} lg={3} xl={3}sx={{display: 'flex',justifyContent: 'center', mt:8}}>
     
       <div className="card" onClick={()=>navigate(`/moviecollection/${movie.id}`)} style={{width:"300px", height:"480px"}}> 
             <img 

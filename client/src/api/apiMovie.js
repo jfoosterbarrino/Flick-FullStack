@@ -1,6 +1,4 @@
 import apiClientTokenAuth from './clientTokenAuth';
-import instance from './axios';
-import requests from './requests';
 
 const endpoint ='/api/movie'
 
@@ -32,7 +30,12 @@ const getMovies = async(token, cancelToken) =>{
 
 const getMoviesByUser = async(token, userId, cancelToken)=>{
     const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/user/"+userId)
-    return response.data.movies
+    return response
+}
+
+const getWlByUser = async(token, userId, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/watchlist/show/"+userId)
+    return response
 }
 
 const postMovieToUser = async(token, movieId, cancelToken)=>{
@@ -49,66 +52,80 @@ const removeAllMovies = async(token, cancelToken)=>{
     return response
 }
 
-const getTrending = async()=>{
-    const response =await instance.get(requests.trendingMovies)
+const postMovieToWl = async(token, movieId, cancelToken)=>{
+    const response =await apiClientTokenAuth(token, cancelToken).post(endpoint+"/watchlist/"+movieId)
     return response
 }
-const getTopRated = async()=>{
-    const response =await instance.get(requests.topRatedMovies)
-    return response
-}
-const getAction = async()=>{
-    const response =await instance.get(requests.actionMovies)
-    return response
-}
-const getComedy = async()=>{
-    const response =await instance.get(requests.comedyMovies)
-    return response
-}
-const getDrama = async()=>{
-    const response =await instance.get(requests.dramaMovies)
-    return response
-}
-const getHorror = async()=>{
-    const response =await instance.get(requests.horrorMovies)
-    return response
-}
-const getRomance = async()=>{
-    const response =await instance.get(requests.romanceMovies)
-    return response
-}
-const getSciFi = async()=>{
-    const response =await instance.get(requests.scifiMovies)
+const removeMovieFromWl = async(token, movieId, cancelToken)=>{
+    const response =await apiClientTokenAuth(token, cancelToken).put(endpoint+ "/watchlist/remove/"+movieId)
     return response
 }
 
-const getMoviesByGenre = async(genreId)=>{
-    const response = await instance.get(requests.moviesByGenre + genreId)
+const removeAllWl = async(token, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).put(endpoint+"/watchlist/clear")
     return response
 }
 
-const getMovieById = async(movieId)=>{
-    const response = await instance.get(`/movie/${movieId}${requests.custom}`)
-    return response.data
+const getTrending = async(token, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/trending")
+    return response
 }
-
-const getCastByMovie = async(movieId)=>{
-    const response = await instance.get(`/movie/${movieId}/credits${requests.custom}`)
+const getTopRated = async(token, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/toprated")
+    return response
+}
+const getAction = async(token, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/action")
+    return response
+}
+const getComedy = async(token, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/comedy")
+    return response
+}
+const getDrama = async(token, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/drama")
+    return response
+}
+const getHorror = async(token, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/horror")
+    return response
+}
+const getRomance = async(token, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/romance")
+    return response
+}
+const getSciFi = async(token, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/scifi")
     return response
 }
 
-const getProvidersByMovie = async(movieId)=>{
-    const response = await instance.get(`/movie/${movieId}/watch/providers${requests.custom}`)
+const getMoviesByGenre = async(token, genreId, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/genre/"+genreId)
     return response
 }
 
-const getReviewsByMovie = async(movieId)=>{
-    const response = await instance.get(`/movie/${movieId}/reviews${requests.custom}`)
+const getMovieById = async(token, movieId, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/tmdb/"+movieId)
     return response
 }
-const getMoviesBySearch = async(movieTitle)=>{
-    const response = await instance.get(`/search/movie${requests.custom}&query=${movieTitle}`)
-    return response.data.results
+
+const getCastByMovie = async(token, movieId, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/cast/"+movieId)
+    return response
+}
+
+const getProvidersByMovie = async(token, movieId, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/providers/"+movieId)
+    return response
+}
+
+const getReviewsByMovie = async(token, movieId, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/reviews/"+movieId)
+    return response
+}
+const getMoviesBySearch = async(token, movieTitle, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get(endpoint+"/search/"+movieTitle)
+    return response
 }
 
 const exportedObject={
@@ -133,7 +150,11 @@ const exportedObject={
     postMovie,
     putMovie,
     delMovie,
-    getMovies
+    getMovies,
+    getWlByUser,
+    postMovieToWl,
+    removeMovieFromWl,
+    removeAllWl
 }
 
 export default exportedObject;

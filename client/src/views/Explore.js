@@ -30,7 +30,7 @@ export default function Explore() {
     const myMovies = useMoviesByUser(user.id)
     const {removeRecommend, clearRecommend, addMovie} = useContext(MovieContext)
     const navigate = useNavigate()
-    const [recList, setRecList] = useState([])
+    const [recList, setRecList] = useState(myMovies)
     const [recName, setRecName] = useState("")
 
 
@@ -66,6 +66,19 @@ export default function Explore() {
       const handleAdd=(movie)=>{
         addMovie(movie)
         setAlert({msg:`${movie.title} has been added to your Watch List`,color: "primary"})
+        const source=CancelToken.source();
+        const createMovie=async()=>{
+            const response = await apiMovie.postMovieToWl(user.token, movie.id, source.token)
+            console.log(response)
+            if (response){
+                setAlert({msg: `Watch List Updated and Saved`, color: "background"})
+            }else if(response === false && response !== undefined){
+                setAlert({msg: `You already have this movie`, color: "error"})
+            }
+        }
+        createMovie()
+        return ()=>{source.cancel();}
+
       }
 
       useEffect(
@@ -73,7 +86,7 @@ export default function Explore() {
             const source=CancelToken.source();
             const showMovies=async()=>{
                 const response = await apiMovie.getMoviesByUser(user.token, recUser, source.token)
-                setRecList(response)
+                setRecList(response.data?.movies)
             }
             showMovies()
             return ()=>{source.cancel();}
@@ -100,7 +113,7 @@ export default function Explore() {
     
     </Typography>
     <Typography sx={{display: 'flex', justifyContent: 'center', mb:3}}>
-    <WhiteButton onClick={()=>setRecUser(user.id)}>View My List</WhiteButton>
+    <WhiteButton onClick={()=>setRecUser(user?.id)}>View My List</WhiteButton>
     </Typography>
     <Box sx={{ flexGrow: 1, ml:5, mr:5}}>
     
@@ -110,7 +123,7 @@ export default function Explore() {
     ""
     :
         
-        <div   className="rec-poster">
+        <div key={other?.id}  className="rec-poster">
             <UserDisplay  className="rec-poster" user={other}/>
         </div>
   ))}
@@ -135,10 +148,10 @@ export default function Explore() {
       
         <div className="container">
             {myMovies?.map(movie=>(<>
-        <div  className="box" style={{backgroundImage:`url(${baseUrl}${movie.backdrop_path})`, backgroundPosition:"center center", backgroundRepeat: "no-repeat", backgroundSize:"cover"}}>
-            <span><small>{movie.title}</small></span>          
+        <div  key={movie?.id} className="box" style={{backgroundImage:`url(${baseUrl}${movie?.backdrop_path})`, backgroundPosition:"center center", backgroundRepeat: "no-repeat", backgroundSize:"cover"}}>
+            <span><small>{movie?.title}</small></span>          
               <Typography sx={{backgroundColor:"transparent", display:"flex", justifyContent:"space-between", color:"white", m:3}}>
-              <LiveTvIcon onClick= {()=>navigate(`/moviecollection/${movie.tmdb_id}`)}/>
+              <LiveTvIcon onClick= {()=>navigate(`/moviecollection/${movie?.tmdb_id}`)}/>
               <RemoveCircleSharpIcon onClick={()=>{handleRemoveRecommend(movie)}}/>
               </Typography>
         </div> 
@@ -163,10 +176,10 @@ export default function Explore() {
 
     <div className="container">
         {recList?.map(movie=>(<>
-    <div  className="box" style={{backgroundImage:`url(${baseUrl}${movie.backdrop_path})`, backgroundPosition:"center center", backgroundRepeat: "no-repeat", backgroundSize:"cover"}}>
+    <div key={movie?.id} className="box" style={{backgroundImage:`url(${baseUrl}${movie?.backdrop_path})`, backgroundPosition:"center center", backgroundRepeat: "no-repeat", backgroundSize:"cover"}}>
         <span><small>{movie.title}</small></span>          
           <Typography sx={{backgroundColor:"transparent", display:"flex", justifyContent:"space-between", color:"white", m:3}}>
-          <LiveTvIcon onClick= {()=>navigate(`/moviecollection/${movie.tmdb_id}`)}/>
+          <LiveTvIcon onClick= {()=>navigate(`/moviecollection/${movie?.tmdb_id}`)}/>
           <AddCircleIcon onClick={()=>handleAdd(movie)}/>
           </Typography>
     </div> 

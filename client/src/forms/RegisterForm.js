@@ -67,7 +67,7 @@ export default function RegisterForm(){
     }
 
 
-    return(<>
+    return(
     
         <form onSubmit={formik.handleSubmit}>
             
@@ -156,5 +156,5 @@ export default function RegisterForm(){
             </Typography>
         </form>
         
-    </>)
+    )
 }

@@ -12,12 +12,12 @@ export default function useMoviesByUser(userId){
             const source=CancelToken.source();
             const showMovies=async()=>{
                 const response = await apiMovie.getMoviesByUser(user.token, userId, source.token)
-                setMovies(response)
+                setMovies(response.data?.movies)
             }
             showMovies()
             return ()=>{source.cancel();}
         },
-        []
+        [user.token, userId]
     )
     return movies
 }

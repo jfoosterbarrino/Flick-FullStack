@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -15,6 +15,9 @@ import Rating from './Rating';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+import apiMovie from '../api/apiMovie';
+import {CancelToken} from 'apisauce';
+import useWlByUser from '../hooks/useWlByUser';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -30,19 +33,42 @@ export default function FullWidthGrid() {
     const navigate = useNavigate();
     const {genreId, genreName} = useParams();
     const movies = useMoviesByGenre(genreId);
-    const {watchList, addMovie, removeMovie} = useContext(MovieContext);
-    const {setAlert} = useContext(AppContext)
+    const {addMovie, removeMovie} = useContext(MovieContext);
+    const {user, setAlert} = useContext(AppContext)
+    const watchList = useWlByUser(user?.id)
+
+    const inWatchList = (movie)=>{
+      for(let film of watchList){
+        if(film?.tmdb_id === movie?.id){
+          return true
+        }
+      }
+      return false
+    }
+
 
 
 
     const handleAdd =(movie) => {
       addMovie(movie)
       setAlert({msg:`${movie.title} has been added to your list`,color:"primary"})
+      const source=CancelToken.source();
+      const createMovie=async()=>{
+          const response = await apiMovie.postMovieToWl(user.token, movie.id, source.token)
+      }
+      createMovie()
+      return ()=>{source.cancel();}
     }
 
     const handleRemove =(movie) => {
       removeMovie(movie)
       setAlert({msg:`${movie.title} has been removed from your list`,color:"primary"})
+      const source=CancelToken.source();
+      const dropMovie=async()=>{
+          const response = await apiMovie.removeMovieFromWl(user.token, movie.id, source.token)
+      }
+      dropMovie()
+      return ()=>{source.cancel();}
     }
 
     console.log(movies)
@@ -72,7 +98,7 @@ export default function FullWidthGrid() {
         
                     <LiveTvIcon onClick={()=>navigate(`/moviecollection/${movie.id}`)}/>
                     <Rating movie={movie}/>
-                    {watchList.includes(movie) ?<IndeterminateCheckBoxIcon onClick={()=>handleRemove(movie)}/>:<AddBoxIcon onClick={()=>handleAdd(movie)}/>}
+                    {inWatchList(movie) ?<IndeterminateCheckBoxIcon onClick={()=>handleRemove(movie)}/>:<AddBoxIcon onClick={()=>handleAdd(movie)}/>}
 
                 </Box>
             </Box>

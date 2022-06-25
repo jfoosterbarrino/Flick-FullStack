@@ -19,7 +19,6 @@
 .env.production.local
 
 # api keys
-.env
 src/components/Test.js
 
 npm-debug.log*

@@ -1,8 +1,18 @@
-# from . import bp as api
-# from app.blueprints.auth.authy import token_auth
-# from flask import request, make_response, g, abort
-# from app.models import *
-# from helpers import require_admin
+from . import bp as api
+from app.blueprints.auth.authy import token_auth
+from flask import request, make_response, g, abort
+from app.models import *
+from helpers import require_admin
+import os
+import requests
+
+@api.get('/genre')
+@token_auth.login_required
+def get_genres():
+    url = f"https://api.themoviedb.org/3/genre/movie/list?api_key={os.getenv('API_KEY')}"
+    response = requests.get(url)
+    data= response.json()
+    return make_response({"data":data}, 200)
 
 # @api.get('/genre')
 # def get_genres():

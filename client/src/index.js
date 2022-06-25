@@ -24,7 +24,7 @@ initializeApp(firebaseConfig);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
   <BrowserRouter>
   <ThemeProvider theme = {primaryTheme}>
     <MovieContextProvider>
@@ -34,7 +34,7 @@ root.render(
     </MovieContextProvider>
     </ThemeProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 reportWebVitals();

@@ -1,8 +1,7 @@
-import instance from './axios';
-import requests from './requests';
+import apiClientTokenAuth from './clientTokenAuth';
 
-const getGenres = async()=>{
-    const response = await instance.get(requests.allGenres)
+const getGenres = async(token, cancelToken)=>{
+    const response = await apiClientTokenAuth(token, cancelToken).get('/api/genre')
     return response
 }
 

@@ -17,6 +17,7 @@ class User(UserMixin, db.Model):
     token = db.Column(db.String, unique = True, index = True)
     token_exp = db.Column(db.DateTime)
     movies = db.relationship('Movie', backref='user', lazy='dynamic', cascade='all, delete', secondary="movie_user")
+    watch_list = db.relationship('Movie', backref='owner', lazy='dynamic', cascade='all, delete', secondary="user_movie")
 
     def _repr_(self):
         return f'<User: {self.id} | {self.email}>'
@@ -64,6 +65,14 @@ class User(UserMixin, db.Model):
 
     def remove_movie(self, movie):
         self.movies.remove(movie)
+        db.session.commit()
+
+    def add_wl(self, movie):
+        self.watch_list.append(movie)
+        db.session.commit()
+
+    def remove_wl(self, movie):
+        self.watch_list.remove(movie)
         db.session.commit()
 
     def register(self, data):
@@ -192,6 +201,11 @@ class Movie(db.Model):
 
 
 class MovieUser(db.Model):
+    movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+
+
+class UserMovie(db.Model):
     movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
 

@@ -23,7 +23,7 @@ const AppContextProvider=({children})=>{
     const [admin, setAdmin] =useState(false);
     const [login, setLogin] =useState(false);
     const [signUp, setSignUp] =useState(false);
-    const [recUser, setRecUser] =useState(getUserFromLS()?.id?? {});
+    const [recUser, setRecUser] =useState(getUserFromLS()?.id??{});
 
 
     const setUser = (user)=>{

@@ -10,8 +10,8 @@ export default function useRemoveAllMovie(){
         ()=>{ 
             const source=CancelToken.source();
             const removeMovies=async()=>{
-                const response = await apiMovie.removeAllMovies(user.token, source.token)
-                setAlert({msg:"Your Recommend List has been cleared",color:"error"})
+                const response = await apiMovie.removeAllWl(user.token, source.token)
+                setAlert({msg:"Your Watch List has been cleared",color:"error"})
                 console.log(response)
             }
             removeMovies()

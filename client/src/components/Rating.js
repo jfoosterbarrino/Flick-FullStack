@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography'
 
 
 export default function TextRating({movie}) {
-  const value = Math.round((movie.vote_average/2).toFixed(.5));
+  const value = Math.round((movie?.vote_average/2).toFixed(.5));
 
 
   return (
