@@ -48,16 +48,14 @@ export default function Explore() {
       }
 
     const handleRemoveRecommend=(movie)=>{
-        removeMovie()
+        removeRecommend(movie)
         setAlert({msg:`${movie.title} has been removed from your Recommend List`,color:"primary"})
         const source=CancelToken.source();
         const removeMovie=async()=>{
             const response = await apiMovie.removeMovieFromUser(user.token, movie.tmdb_id, source.token)
             console.log(response)
         }
-        
-        removeRecommend(movie)
-        
+        removeMovie()
       }
 
       const handleAdd=(movie)=>{
