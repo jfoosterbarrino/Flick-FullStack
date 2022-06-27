@@ -93,7 +93,7 @@ export default function Explore() {
             const source=CancelToken.source();
             const showUser=async()=>{
                 const response = await apiUser.getUser(user.token, recUser, source.token)
-                setRecName(response.first_name)
+                setRecName(response?.first_name)
             }
             showUser()
             return ()=>{source.cancel();}

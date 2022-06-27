@@ -19,30 +19,27 @@ import Box from '@mui/material/Box';
 import Progress from './Progress';
 import apiMovie from '../api/apiMovie';
 import {CancelToken} from 'apisauce';
+import Typography from '@mui/material/Typography';
 
 const baseUrl = "https://image.tmdb.org/t/p/original/";
 
 export default function Rows() {
 
-    const {topRated, setTopRated, trending, setTrending, action, 
-      setAction, comedy, setComedy, horror, setHorror, drama, setDrama, sciFi, setSciFi,
-      romance,setRomance, addMovie, removeMovie, watchList} = useContext(MovieContext)
-    setTopRated(useTopRated())
-    setTrending(useTrending())
-    setAction(useAction())
-    setComedy(useComedy())
-    setDrama(useDrama())
-    setHorror(useHorror())
-    setSciFi(useSciFi())
-    setRomance(useRomance())
+    const {addMovie, removeMovie, watchList} = useContext(MovieContext)
+    const topRated = useTopRated()
+    const trending = useTrending()
+    const action = useAction()
+    const comedy = useComedy()
+    const drama = useDrama()
+    const horror = useHorror()
+    const sciFi = useSciFi()
+    const romance = useRomance()
 
     const [trailerUrl, setTrailerUrl] = useState("")
     const [movieForButton, setMovieForButton] = useState({})
     const navigate = useNavigate()
     const [inList, setInList] = useState(false)
     const {user, setAlert} = useContext(AppContext)
-    // const watchList = useWlByUser(user.id)
-    console.log(watchList)
 
     useEffect(()=>{
       for(let film of watchList){
@@ -172,7 +169,7 @@ export default function Rows() {
   return (<>
   
   <div className="watchlist-bg">
-  <div className="row">
+  <Typography className="row">
     <h2 className="genre">Your Watch List</h2>
 
     <div className="row_posters">
@@ -187,10 +184,10 @@ export default function Rows() {
                   />
         ))}
     </div>
-    </div>
+    </Typography>
     
   </div>
-  <div className="row">
+  <Typography className="row">
     <h2 className="genre">Top Rated</h2>
 
     <div className="row_posters">
@@ -206,9 +203,9 @@ export default function Rows() {
         ))}
     </div>
     
-  </div>
+  </Typography>
 
-  <div className="row">
+  <Typography className="row">
     <h2 className="genre">Trending Now</h2>
 
     <div className="row_posters">
@@ -225,7 +222,7 @@ export default function Rows() {
         ))}
     </div>
     
-  </div>
+  </Typography>
   {trailerUrl && 
   <>
   <div className="trailer-content">
@@ -237,7 +234,7 @@ export default function Rows() {
   <Youtube videoId = {trailerUrl} opts={opts}/>
   </>
   }
-  <div className="row">
+  <Typography className="row">
     <h2 className="genre">Horror</h2>
 
     <div className="row_posters">
@@ -253,8 +250,8 @@ export default function Rows() {
         ))}
     </div>
    
-  </div>
-  <div className="row">
+  </Typography>
+  <Typography className="row">
     <h2 className="genre">Comedy</h2>
 
     <div className="row_posters">
@@ -270,8 +267,8 @@ export default function Rows() {
         ))}
     </div>
     
-  </div>
-  <div className="row">
+  </Typography>
+  <Typography className="row">
     <h2 className="genre">Drama</h2>
 
     <div className="row_posters">
@@ -287,8 +284,8 @@ export default function Rows() {
         ))}
     </div>
     
-  </div>
-  <div className="row">
+  </Typography>
+  <Typography className="row">
     <h2 className="genre">Action</h2>
 
     <div className="row_posters">
@@ -304,8 +301,8 @@ export default function Rows() {
         ))}
     </div>
     
-  </div>
-  <div className="row">
+  </Typography>
+  <Typography className="row">
     <h2 className="genre">Romance</h2>
 
     <div className="row_posters">
@@ -321,8 +318,8 @@ export default function Rows() {
         ))}
     </div>
  
-  </div>
-  <div className="row">
+  </Typography>
+  <Typography className="row">
     <h2 className="genre">SciFi</h2>
 
     <div className="row_posters">
@@ -337,7 +334,7 @@ export default function Rows() {
                 />
         ))}
     </div>
-  </div>
+  </Typography>
   
   
   </>)

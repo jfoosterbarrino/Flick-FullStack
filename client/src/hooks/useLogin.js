@@ -15,11 +15,12 @@ export default function useLogin(loginCreds, setLoginCreds, setError, setUser){
         const response = await getUser(loginCreds.email, loginCreds.password, cancelToken)
         if(response.user?.token){
             console.log(response)
-            setAlert({msg: `Login Successful! Welcome back ${response.user.first_name}!`, color:"background"})
+            setAlert({msg: `Login Successful! Welcome back ${response.user.first_name}!`, color:"info"})
             setUser(response.user);
             setLoginCreds({})
             console.table(response.user)
             navigate('/')
+            window.location.reload(false)
         }
         setError(response.error);
     }

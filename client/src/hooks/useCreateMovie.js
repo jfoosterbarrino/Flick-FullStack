@@ -13,7 +13,7 @@ export default function useCreateMovie(movieId){
                 const response = await apiMovie.postMovieToUser(user.token, movieId, source.token)
                 console.log(response)
                 if (response){
-                    setAlert({msg: `Recommend It List Updated and Saved`, color: "background"})
+                    setAlert({msg: `Recommend It List Updated and Saved`, color: "info"})
                 }else if(response === false && response !== undefined){
                     setAlert({msg: `You already have this movie`, color: "error"})
                 }

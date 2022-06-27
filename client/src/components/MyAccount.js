@@ -50,7 +50,7 @@ export default function MyAccount({user}) {
     const handleOpen =()=>{
       setContent(<div style={{display:"flex", justifyContent:"space-around"}} >
         <Typography sx={{display:"flex", flexDirection:"column", alignItems:"left",justifyContent:"space-between", pl:3, pr:3}}>
-            <div>
+            <Typography>
             <h4 style={{marginBottom:"10px"}}>Watch List<br/><hr/></h4>
             <div style={{marginBottom:"15px"}}>
                 {watchList?.map((film)=>(
@@ -58,19 +58,19 @@ export default function MyAccount({user}) {
                 ))}
 
             </div> 
-            </div>
+            </Typography>
             <Link to='/watchlist' onClick={()=>handleWatch()}><DarkButton>View</DarkButton></Link>
         </Typography>
 
         <Typography sx={{display:"flex", flexDirection:"column", alignItems:"left",justifyContent:"space-between", pl:3, pr:2}}>  
-            <div>
+            <Typography>
             <h4 style={{marginBottom:"10px"}}>Recommend List<br/><hr/></h4>
             <div style={{marginBottom:"15px"}}>
             {recommendList?.map((movie)=>(
                     <p key={movie.id}>{movie.title}</p>
                 ))}
             </div>
-            </div>
+            </Typography>
             <Link to='/recommend' onClick={()=>handleRecommend()}><DarkButton sx={{position:"absolute", left:"50%"}}>View</DarkButton></Link>
         </Typography>
       </div>)

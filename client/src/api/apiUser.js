@@ -7,12 +7,12 @@ const endpoint ='/api/user'
 
 const getUsers = async(token, cancelToken)=>{
     const response = await apiClientTokenAuth(token, cancelToken).get(endpoint)
-    return response.data.users
+    return response?.data?.users
 }
 
 const getUser = async(token, userId, cancelToken)=>{
     const response = await apiClientTokenAuth(token, cancelToken).get(endpoint + "/"+userId)
-    return response.data
+    return response?.data
 }
 
 const postUser = async(userInfo, cancelToken) => {

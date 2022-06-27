@@ -7,6 +7,7 @@ import useLogin from '../hooks/useLogin';
 import DarkButton from '../components/DarkButton';
 import {Link} from 'react-router-dom'
 import Typography from '@mui/material/Typography'
+import Error from '../components/Error';
 
 
 
@@ -29,7 +30,7 @@ export default function LoginForm(){
 
     const {user, setUser, setLogin, setSignUp} = useContext(AppContext)
     const [loginCreds, setLoginCreds] = useState({})
-    const [setError] = useState('')
+    const [error, setError] = useState('')
 
     useLogin(loginCreds, setLoginCreds, setError, setUser)
 
@@ -84,6 +85,7 @@ export default function LoginForm(){
             <DarkButton type="submit ">Login</DarkButton>
             <Link to="/signup" onClick={()=>handleSignUp()}style={{textDecoration:"none"}}><DarkButton>{user.token?"Edit Profile":"Sign Up"}</DarkButton></Link>
             </Typography>
+            <Error>{error}</Error>
         </form>
     )
 }

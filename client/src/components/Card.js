@@ -51,8 +51,6 @@ export default function FullWidthGrid() {
     const [inList, setInList] = useState(false)
     const [inRecommend, setInRecommend] = useState(false)
     const {setAlert, user} = useContext(AppContext)
-    // const recommendList = useMoviesByUser(user?.id)
-    // const watchList = useWlByUser(user?.id)
     const streaming =providers?.flatrate?.concat(providers.buy, providers.rent)
       
     
@@ -158,7 +156,7 @@ export default function FullWidthGrid() {
         
             <div className="card"> 
                 <img 
-                    src={`${baseUrl}${movie?.poster_path}`} 
+                    src={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`} 
                     alt={movie?.title}
                 />
                 <div className="con-text">
@@ -182,7 +180,7 @@ export default function FullWidthGrid() {
 
     <Box sx={{ width: '100%', backgroundColor:"transparent"}}>
       <Stack spacing={2}>
-        <Item>{trailerUrl ? <Youtube videoId = {trailerUrl} opts={opts}/>:<img alt="" className="backdrop" src = {`${baseUrl}${movie?.backdrop_path}`}/>}
+        <Item>{trailerUrl ? <Youtube videoId = {trailerUrl} opts={opts}/>:<img alt="" className="backdrop" src = {`https://image.tmdb.org/t/p/original/${movie?.backdrop_path}`}/>}
           
 
         </Item>
@@ -223,17 +221,17 @@ export default function FullWidthGrid() {
         <Item sx={{fontFamily:"Lora, serif;"}}>
           <h1 style={{color:"#081a36", textAlign:"center"}}>Cast</h1>
         <div className="row_posters">
-          {cast?.map(person=>person?.profile_path?<>
+          {cast?.map(person=>person?.profile_path?
                             <img 
                             className ="row_poster"
                             key = {person?.id} 
-                            src={`${baseUrl}${person?.profile_path}`} 
+                            src={`https://image.tmdb.org/t/p/original/${person?.profile_path}`} 
                             alt={person?.name}
                             title={person?.name}
                             />
                       
                            
-          </>
+          
           :"")}
           </div>
         </Item>
@@ -242,17 +240,17 @@ export default function FullWidthGrid() {
         <Item sx={{fontFamily:"Lora, serif;"}}>
           <h1 style={{color:"#081a36", textAlign:"center"}}>Streaming Services</h1>
         <div className="row_posters">
-          {streaming?.map(provider=>provider?.logo_path?<>
+          {streaming?.map(provider=>provider?.logo_path?
                             <img 
                             className ="row_poster"
                             key = {provider?.provider_id} 
-                            src={`${baseUrl}${provider?.logo_path}`} 
+                            src={`https://image.tmdb.org/t/p/original/${provider?.logo_path}`} 
                             alt={provider?.provider_name}
                             title={provider?.provider_name}
                             />
                       
                            
-          </>:
+          :
           "")}
           </div>
 

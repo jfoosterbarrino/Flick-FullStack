@@ -25,7 +25,7 @@ const delMovie =async(token, movieId, cancelToken) =>{
 
 const getMovies = async(token, cancelToken) =>{
     const response = await apiClientTokenAuth(token, cancelToken).get(endpoint)
-    return response.data.movies
+    return response?.data?.movies
 }
 
 const getMoviesByUser = async(token, userId, cancelToken)=>{

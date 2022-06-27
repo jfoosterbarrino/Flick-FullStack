@@ -11,10 +11,8 @@ export default function useGenres(){
         ()=>{ 
             const source=CancelToken.source();
             const showGenres=async()=>{
-                const response = await apiGenre.getGenres(user.token, source.token)
-                console.log(response)
-                console.log(response.data.data.genres)
-                setGenres(response?.data.data.genres)
+                const response = await apiGenre.getGenres(user.token, source.token)      
+                setGenres(response?.data?.data?.genres)
             }
             showGenres()
             return ()=>{source.cancel();}

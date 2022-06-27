@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import Progress from './Progress';
 import {CancelToken} from 'apisauce';
 import apiMovie from '../api/apiMovie';
+import Typography from '@mui/material/Typography';
 
 
 export default function Banner() {
@@ -16,7 +17,7 @@ export default function Banner() {
     const {addMovie, removeMovie, watchList} = useContext(MovieContext)
     const [inList, setInList] = useState(false)
     const {user, setAlert} = useContext(AppContext)
-    // const watchList = useWlByUser(user.id)
+    
     
     useEffect(()=>{
             const source=CancelToken.source();
@@ -86,8 +87,8 @@ export default function Banner() {
     }
 
   return (
-  <header className="banner" style={{backgroundSize:"cover", backgroundImage:`url(https://image.tmdb.org/t/p/original/${movie?.backdrop_path})`, backgroundPosition:"center center"}}>
-    <div className="banner_contents">
+  <Typography className="banner" style={{backgroundSize:"cover", backgroundImage:`url(https://image.tmdb.org/t/p/original/${movie?.backdrop_path})`, backgroundPosition:"center center"}}>
+    <Typography className="banner_contents">
         <h1 className="banner_title">
             {movie?.title || movie?.name || movie?.original_name}
         </h1>
@@ -100,6 +101,6 @@ export default function Banner() {
 
         </div>
         
-    </div>
-  </header>)
+    </Typography>
+  </Typography>)
 }

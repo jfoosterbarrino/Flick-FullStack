@@ -13,7 +13,7 @@ export default function useCreateMovie(movieId){
                 const response = await apiMovie.postMovieToWl(user.token, movieId, source.token)
                 console.log(response)
                 if (response){
-                    setAlert({msg: `Watch List Updated and Saved`, color: "background"})
+                    setAlert({msg: `Watch List Updated and Saved`, color: "info"})
                 }else if(response === false && response !== undefined){
                     setAlert({msg: `You already have this movie`, color: "error"})
                 }
