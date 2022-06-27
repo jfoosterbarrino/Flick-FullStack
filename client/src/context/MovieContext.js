@@ -13,7 +13,7 @@ const MovieContextProvider = ({children})=>{
 
     const getWatchListFromLS = ()=>{
         if(user){
-        let watchList = localStorage.getItem('watchList')
+        let watchList = localStorage.getItem(`${user.id}watchList`)
         if(watchList){
             return JSON.parse(watchList)
         }
@@ -23,7 +23,7 @@ const MovieContextProvider = ({children})=>{
 
     const getRecommendListFromLS = ()=>{
         if(user){
-        let recommendList = localStorage.getItem('recommendList')
+        let recommendList = localStorage.getItem(`${user.id}recommendList`)
         if(recommendList){
             return JSON.parse(recommendList)
         }
@@ -48,12 +48,11 @@ const MovieContextProvider = ({children})=>{
     const [moviesBySearch, setMoviesBySearch] =useState([])
 
     useEffect(()=>{
-        
         const source=CancelToken.source();
         const showMovies=async()=>{
             const response = await apiMovie.getWlByUser(user.token, user?.id, source.token)
             if(response.data?.watchlist){
-                localStorage.setItem('watchList', JSON.stringify(response.data?.watchlist))
+                localStorage.setItem(`${user.id}watchList`, JSON.stringify(response.data?.watchlist))
                 }
         }
         showMovies()
@@ -65,12 +64,11 @@ const MovieContextProvider = ({children})=>{
     
 
     useEffect(()=>{
-        
         const source=CancelToken.source();
         const showMovies=async()=>{
             const response = await apiMovie.getMoviesByUser(user.token, user?.id, source.token)
             if(response.data?.movies){
-                localStorage.setItem('recommendList', JSON.stringify(response.data?.movies))
+                localStorage.setItem(`${user.id}recommendList`, JSON.stringify(response.data?.movies))
                 }
         }
         showMovies()
