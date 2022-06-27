@@ -1,24 +1,34 @@
-import {createContext, useState, useReducer, useEffect} from "react";
+import React, {createContext, useState, useReducer, useEffect, useContext} from "react";
 import {watchListReducer, watchListActions} from '../reducers/watchListReducer'
 import {recommendListReducer, recommendListActions} from '../reducers/recommendListReducer'
+import {AppContext} from './AppContext';
+import apiMovie from '../api/apiMovie';
+import {CancelToken} from 'apisauce';
 
 
 export const MovieContext = createContext();
 
 const MovieContextProvider = ({children})=>{
+    const {user} = useContext(AppContext);
 
     const getWatchListFromLS = ()=>{
+        if(user){
         let watchList = localStorage.getItem('watchList')
         if(watchList){
             return JSON.parse(watchList)
         }
+        }
+
     }
 
     const getRecommendListFromLS = ()=>{
+        if(user){
         let recommendList = localStorage.getItem('recommendList')
         if(recommendList){
             return JSON.parse(recommendList)
         }
+        }
+
     }
 
     const [trending, setTrending] = useState([]) 
@@ -34,17 +44,40 @@ const MovieContextProvider = ({children})=>{
     const [movieById, setMovieById] = useState([]) 
     const [cast, setCast]= useState([])
     const [watchList, dispatch] = useReducer(watchListReducer, getWatchListFromLS()??[])
-    const [recommendList, dispatcher] = useReducer(recommendListReducer, getRecommendListFromLS()??[])
+    const [recommendList, dispatcher] = useReducer(recommendListReducer,getRecommendListFromLS()??[])
     const [moviesBySearch, setMoviesBySearch] =useState([])
 
     useEffect(()=>{
-        localStorage.setItem('watchList', JSON.stringify(watchList))
-    }, [watchList]
+        
+        const source=CancelToken.source();
+        const showMovies=async()=>{
+            const response = await apiMovie.getWlByUser(user.token, user?.id, source.token)
+            if(response.data?.watchlist){
+                localStorage.setItem('watchList', JSON.stringify(response.data?.watchlist))
+                }
+        }
+        showMovies()
+        return ()=>{source.cancel();}
+        
+
+    }, [watchList, user.id, user.token]
     )
+    
 
     useEffect(()=>{
-        localStorage.setItem('recommendList', JSON.stringify(recommendList))
-    }, [recommendList]
+        
+        const source=CancelToken.source();
+        const showMovies=async()=>{
+            const response = await apiMovie.getMoviesByUser(user.token, user?.id, source.token)
+            if(response.data?.movies){
+                localStorage.setItem('recommendList', JSON.stringify(response.data?.movies))
+                }
+        }
+        showMovies()
+        return ()=>{source.cancel();}
+        
+        
+    }, [recommendList, user.id, user.token]
     )
 
 

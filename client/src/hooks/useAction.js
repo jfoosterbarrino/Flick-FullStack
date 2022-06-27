@@ -12,7 +12,7 @@ export default function useAction(){
             const source=CancelToken.source();
             const showMovies=async()=>{
                 const response = await apiMovie.getAction(user.token, source.token)
-                setMovies(response.data?.data.results)
+                setMovies(response.data?.data?.results)
             }
             showMovies()
             return ()=>{source.cancel();}

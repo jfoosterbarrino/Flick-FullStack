@@ -53,8 +53,9 @@ console.log(search)
 
 {searchResults?.map(movie=>movie.poster_path?(
   <Grid key={movie.id} item xs={6} sm={4} md={4} lg={3} xl={3}sx={{display: 'flex',justifyContent: 'center', mt:8}}>
+    {movie?.tmdb_id ?
     
-      <div className="card" onClick={()=>navigate(`/moviecollection/${movie.id}`)} style={{width:"300px", height:"480px"}}> 
+      <div className="card" onClick={()=>navigate(`/moviecollection/${movie.tmdb_id}`)} style={{width:"300px", height:"480px"}}> 
             <img 
                 src={`${baseUrl}${movie.poster_path}`} 
                 alt={movie.title}
@@ -68,6 +69,22 @@ console.log(search)
             </p>
             </div>
         </div>
+        :
+        <div className="card" onClick={()=>navigate(`/moviecollection/${movie.id}`)} style={{width:"300px", height:"480px"}}> 
+        <img 
+            src={`${baseUrl}${movie.poster_path}`} 
+            alt={movie.title}
+        />
+        <div className="con-text">
+            <br/>
+        <h2>{movie.title}</h2>
+        <br/>
+        <p>
+            {movie.overview.slice(0,300)}
+        </p>
+        </div>
+    </div>
+    }
   </Grid>
 )
 :

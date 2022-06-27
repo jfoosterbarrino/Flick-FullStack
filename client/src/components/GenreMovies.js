@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -17,7 +17,6 @@ import LiveTvIcon from '@mui/icons-material/LiveTv';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import apiMovie from '../api/apiMovie';
 import {CancelToken} from 'apisauce';
-import useWlByUser from '../hooks/useWlByUser';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -33,13 +32,13 @@ export default function FullWidthGrid() {
     const navigate = useNavigate();
     const {genreId, genreName} = useParams();
     const movies = useMoviesByGenre(genreId);
-    const {addMovie, removeMovie} = useContext(MovieContext);
+    const {addMovie, removeMovie, watchList} = useContext(MovieContext);
     const {user, setAlert} = useContext(AppContext)
-    const watchList = useWlByUser(user?.id)
+    // const watchList = useWlByUser(user?.id)
 
     const inWatchList = (movie)=>{
       for(let film of watchList){
-        if(film?.tmdb_id === movie?.id){
+        if(film?.tmdb_id === movie?.id || film?.id === movie?.id){
           return true
         }
       }
@@ -55,6 +54,7 @@ export default function FullWidthGrid() {
       const source=CancelToken.source();
       const createMovie=async()=>{
           const response = await apiMovie.postMovieToWl(user.token, movie.id, source.token)
+          console.log(response)
       }
       createMovie()
       return ()=>{source.cancel();}
@@ -66,6 +66,7 @@ export default function FullWidthGrid() {
       const source=CancelToken.source();
       const dropMovie=async()=>{
           const response = await apiMovie.removeMovieFromWl(user.token, movie.id, source.token)
+          console.log(response)
       }
       dropMovie()
       return ()=>{source.cancel();}

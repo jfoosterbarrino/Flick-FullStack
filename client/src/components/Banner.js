@@ -8,16 +8,15 @@ import Box from '@mui/material/Box';
 import Progress from './Progress';
 import {CancelToken} from 'apisauce';
 import apiMovie from '../api/apiMovie';
-import useWlByUser from '../hooks/useWlByUser';
 
 
 export default function Banner() {
     const [movie, setMovie] = useState()
     const navigate = useNavigate()
-    const {addMovie, removeMovie} = useContext(MovieContext)
+    const {addMovie, removeMovie, watchList} = useContext(MovieContext)
     const [inList, setInList] = useState(false)
     const {user, setAlert} = useContext(AppContext)
-    const watchList = useWlByUser(user.id)
+    // const watchList = useWlByUser(user.id)
     
     useEffect(()=>{
             const source=CancelToken.source();
@@ -25,7 +24,7 @@ export default function Banner() {
                 const request = await apiMovie.getTrending(user.token, source.token)
 
                 setMovie(request.data?.data.results[
-                    Math.floor(Math.random()*request.data?.data.results.length-1)
+                    Math.floor(Math.random()*request.data?.data?.results.length-1)
                 ]
                 );
                 return request;
@@ -35,22 +34,25 @@ export default function Banner() {
 
     useEffect(()=>{
         for(let film of watchList){
-          if(film?.tmdb_id === movie?.id){
+          if(film?.tmdb_id === movie?.id || film?.id === movie?.id){
             setInList(true)
+            return
           }
         }
-    },[movie])
+        setInList(false)
+    },[movie, watchList])
 
     const handleRemove=(movie)=>{
             removeMovie(movie)
             setAlert({msg:`${movie.title} has been removed from your list`,color:"primary"})
             setInList(!inList)
             const source=CancelToken.source();
-            const removeMovie=async()=>{
+            const dropMovie=async()=>{
                 const response = await apiMovie.removeMovieFromWl(user.token, movie.id, source.token)
+                console.log(response)
 
             }
-            removeMovie()
+            dropMovie()
             return ()=>{source.cancel();}
         }
 
@@ -61,6 +63,7 @@ export default function Banner() {
         const source=CancelToken.source();
         const createMovie=async()=>{
             const response = await apiMovie.postMovieToWl(user.token, movie.id, source.token)
+            console.log(response)
         }
         createMovie()
         return ()=>{source.cancel();}

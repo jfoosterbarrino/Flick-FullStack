@@ -27,7 +27,7 @@ export default function UserDisplay({user}) {
       <CardContent sx={{display: "flex", justifyContent:"center", flexDirection:"row"}}>
 
         <Typography sx={{display: "flex", justifyContent:"center"}}>
-        <DarkButton onClick={()=>setRecUser(user.id)}>{user.first_name}'s Recommended</DarkButton>
+        <DarkButton onClick={()=>setRecUser(user.id)}>{user.first_name}s Recommended</DarkButton>
         </Typography>
       </CardContent>
       

@@ -12,7 +12,7 @@ export default function useComedy(){
             const source=CancelToken.source();
             const showMovies=async()=>{
                 const response = await apiMovie.getComedy(user.token, source.token)
-                setMovies(response.data?.data.results)
+                setMovies(response.data?.data?.results)
             }
             showMovies()
             return ()=>{source.cancel();}

@@ -17,20 +17,8 @@ import RequireAccount from './components/RequireAccount';
 import RequireAdmin from './components/RequireAdmin';
 import Box from '@mui/material/Box';
 import AdminMovies from './components/AdminMovies';
-import Test from './components/Test';
-import apiGenre from './api/apiGenre';
-import apiMovie from './api/apiMovie';
-import {useContext} from 'react';
-import {AppContext} from './context/AppContext';
-import {CancelToken} from 'apisauce';
-import DarkButton from './components/DarkButton';
+import React from 'react';
 
-
-const handleAPITest= async ()=>{
-  const source = CancelToken.source();
-  const response_object= await apiMovie.getMoviesByUser('jheSbeq3gigxQJJQXGYbArkUl-8YYFIP5Qo43mJOv9I',1 ,source.token);
-  console.log(response_object)
-}
 
 
 function App() {
@@ -55,8 +43,6 @@ function App() {
         <Route path='/genres/:genreName/:genreId' element={<RequireAccount redirectTo={'/'}><GenreMovies/></RequireAccount>}/>
       </Routes>
       </Box>
-      {/* <DarkButton onClick={()=>handleAPITest()}>API TEST</DarkButton> */}
-      {/* <Test/> */}
   </div>)
 }
 

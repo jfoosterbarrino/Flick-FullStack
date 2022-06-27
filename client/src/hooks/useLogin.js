@@ -1,4 +1,4 @@
-import React, {useEffect, useContext} from 'react';
+import {useEffect, useContext} from 'react';
 import {getUser} from '../api/apiLogin';
 import {CancelToken} from 'apisauce';
 import {useNavigate} from 'react-router-dom'

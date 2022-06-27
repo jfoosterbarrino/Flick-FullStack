@@ -18,7 +18,6 @@ import WhiteButton from '../components/WhiteButton';
 import { useEffect } from 'react';
 import {CancelToken} from 'apisauce';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import useWlByUser from '../hooks/useWlByUser';
 
 
   const baseUrl = "https://image.tmdb.org/t/p/original/";
@@ -29,36 +28,33 @@ export default function Explore() {
     const users = useUsers()
     const {user, recUser, setRecUser, setAlert} = useContext(AppContext)
     const myMovies = useMoviesByUser(user.id)
-    const watchList = useWlByUser(user.id)
-    const {removeRecommend, clearRecommend, addMovie} = useContext(MovieContext)
+    // const watchList = useWlByUser(user.id)
+    const {removeRecommend, clearRecommend, addMovie, recommendList, watchList} = useContext(MovieContext)
     const navigate = useNavigate()
     const [recList, setRecList] = useState(myMovies)
     const [recName, setRecName] = useState("")
 
 
     const handleClearRecommend=() => {
-        clearRecommend()
         setAlert({msg:"Recommend List has been cleared",color:"primary"})
-        window.location.reload(false);
         const source=CancelToken.source();
         const removeMovies=async()=>{
             const response = await apiMovie.removeAllMovies(user.token, source.token)
             console.log(response)
         }
         removeMovies()
-        return ()=>{source.cancel();}
+        clearRecommend()
       }
 
     const handleRemoveRecommend=(movie)=>{
-        removeRecommend(movie)
         setAlert({msg:`${movie.title} has been removed from your Recommend List`,color:"primary"})
-        window.location.reload(false);
         const source=CancelToken.source();
         const removeMovie=async()=>{
             const response = await apiMovie.removeMovieFromUser(user.token, movie.tmdb_id, source.token)
+            console.log(response)
         }
         removeMovie()
-        return ()=>{source.cancel();}
+        removeRecommend(movie)
         
       }
 
@@ -76,7 +72,6 @@ export default function Explore() {
             }
         }
         createMovie()
-        return ()=>{source.cancel();}
 
       }
 
@@ -135,7 +130,7 @@ export default function Explore() {
         <br/>
         <br/>
         <h1 className="watchlist-title">My Recommendations</h1>
-        {myMovies?.length>0 ?
+        {recommendList?.length>0 ?
         
         <Typography sx={{display:"flex", justifyContent: 'center', mt:5}}>
        <PurpButton onClick={()=>{handleClearRecommend()}}>CLEAR LIST</PurpButton>
@@ -146,11 +141,11 @@ export default function Explore() {
 
       
         <div className="container">
-            {myMovies?.map(movie=>(<>
+            {recommendList?.map(movie=>(<>
         <div  key={movie?.id} className="box" style={{backgroundImage:`url(${baseUrl}${movie?.backdrop_path})`, backgroundPosition:"center center", backgroundRepeat: "no-repeat", backgroundSize:"cover"}}>
             <span><small>{movie?.title}</small></span>          
               <Typography sx={{backgroundColor:"transparent", display:"flex", justifyContent:"space-between", color:"white", m:3}}>
-              <LiveTvIcon onClick= {()=>navigate(`/moviecollection/${movie?.tmdb_id}`)}/>
+              {movie?.tmdb_id ?<LiveTvIcon onClick= {()=>navigate(`/moviecollection/${movie?.tmdb_id}`)}/>:<LiveTvIcon onClick= {()=>navigate(`/moviecollection/${movie?.id}`)}/>}
               <RemoveCircleSharpIcon onClick={()=>{handleRemoveRecommend(movie)}}/>
               </Typography>
         </div> 
@@ -166,7 +161,7 @@ export default function Explore() {
     <br/>
     <br/>
 
-    {recName? <h1 className="watchlist-title">{recName}'s Recommendations</h1>:""}
+    {recName? <h1 className="watchlist-title">{recName}s Recommendations</h1>:""}
     {!recName || recList?.length>0 ?
         ""
         :
@@ -178,7 +173,7 @@ export default function Explore() {
     <div key={movie?.id} className="box" style={{backgroundImage:`url(${baseUrl}${movie?.backdrop_path})`, backgroundPosition:"center center", backgroundRepeat: "no-repeat", backgroundSize:"cover"}}>
         <span><small>{movie.title}</small></span>          
           <Typography sx={{backgroundColor:"transparent", display:"flex", justifyContent:"space-between", color:"white", m:3}}>
-          <LiveTvIcon onClick= {()=>navigate(`/moviecollection/${movie?.tmdb_id}`)}/>
+          {movie?.tmdb_id ?<LiveTvIcon onClick= {()=>navigate(`/moviecollection/${movie?.tmdb_id}`)}/>:<LiveTvIcon onClick= {()=>navigate(`/moviecollection/${movie?.id}`)}/>}
           <AddCircleIcon onClick={()=>handleAdd(movie)}/>
           </Typography>
     </div> 

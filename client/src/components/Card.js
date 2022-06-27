@@ -24,8 +24,6 @@ import Review from './Review';
 import Link from '@mui/material/Link';
 import apiMovie from '../api/apiMovie';
 import {CancelToken} from 'apisauce';
-import useMoviesByUser from '../hooks/useMoviesByUser';
-import useWlByUser from '../hooks/useWlByUser';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -49,32 +47,35 @@ export default function FullWidthGrid() {
 
     const [trailerUrl, setTrailerUrl] = useState("")
 
-    const {addMovie, removeMovie, addRecommend, removeRecommend} = useContext(MovieContext)
+    const {addMovie, removeMovie, addRecommend, removeRecommend, watchList, recommendList} = useContext(MovieContext)
     const [inList, setInList] = useState(false)
     const [inRecommend, setInRecommend] = useState(false)
     const {setAlert, user} = useContext(AppContext)
-    const recommendList = useMoviesByUser(user?.id)
-    const watchList = useWlByUser(user?.id)
+    // const recommendList = useMoviesByUser(user?.id)
+    // const watchList = useWlByUser(user?.id)
     const streaming =providers?.flatrate?.concat(providers.buy, providers.rent)
+      
     
 
-  
-    
     useEffect(()=>{
         for(let film of watchList){
-          if(film?.tmdb_id === movie?.id){
+          if(film?.tmdb_id === movie?.id || film?.id === movie?.id){
             setInList(true)
+            return
           }
         }
-    },[movie])
-    
+        setInList(false)
+    },[movie, movieId, watchList])
+
     useEffect(()=>{
-        for(let picture of recommendList){
-          if(picture?.tmdb_id === movie?.id){
+     for(let picture of recommendList){
+          if(picture?.tmdb_id === movie?.id || picture?.id === movie?.id){
             setInRecommend(true)
+            return
           }
         }
-    },[movie])
+        setInRecommend(false)
+      },[movie, movieId, recommendList])
 
     const opts ={
       height: "390",
@@ -91,6 +92,7 @@ export default function FullWidthGrid() {
         const source=CancelToken.source();
         const dropMovie=async()=>{
             const response = await apiMovie.removeMovieFromWl(user.token, movie.id, source.token)
+            console.log(response)
         }
         dropMovie()
         return ()=>{source.cancel();}
@@ -102,6 +104,7 @@ export default function FullWidthGrid() {
         const source=CancelToken.source();
         const createMovie=async()=>{
             const response = await apiMovie.postMovieToWl(user.token, movie.id, source.token)
+            console.log(response)
         }
         createMovie()
         return ()=>{source.cancel();}
@@ -114,6 +117,7 @@ export default function FullWidthGrid() {
         const source=CancelToken.source();
         const rmMovie=async()=>{
             const response = await apiMovie.removeMovieFromUser(user.token, movie.id, source.token)
+            console.log(response)
         }
         rmMovie()
         return ()=>{source.cancel();}
@@ -127,6 +131,7 @@ export default function FullWidthGrid() {
         const source=CancelToken.source();
         const makeMovie=async()=>{
             const response = await apiMovie.postMovieToUser(user.token, movie.id, source.token)
+            console.log(response)
         }
         makeMovie()
         return ()=>{source.cancel();}

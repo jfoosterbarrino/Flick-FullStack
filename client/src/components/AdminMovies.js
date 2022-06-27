@@ -52,7 +52,7 @@ export default function AdminSelectItem() {
         {movie ? 
             <>
                 <Typography sx={{p:4, pt:10, textAlign: 'center',color:"#081a36"}} variant="h5">
-                    Edit "{movie.title}"
+                    Edit {movie.title}
                 </Typography>
                 <MovieForm movie={movie}/>
             </>

@@ -9,17 +9,17 @@ import DarkButton from './DarkButton';
 import {MovieContext} from '../context/MovieContext';
 import {AppContext} from '../context/AppContext';
 import Avatar from '@mui/material/Avatar';
-import useMoviesByUser from '../hooks/useMoviesByUser';
 import {Link} from 'react-router-dom';
-import useWlByUser from '../hooks/useWlByUser';
+
 
 
 export default function MyAccount({user}) {
     const [content, setContent] = useState(<></>);
     const [open, setOpen] = useState(false)
-    const recommendList = useMoviesByUser(user.id)
+    // const recommendList = useMoviesByUser(user.id)
     const {setWatch, setRecommend, setHome, setSearch, setPopular, setGenre, setAdmin} = useContext(AppContext)
-    const watchList =useWlByUser(user.id)
+    const {watchList, recommendList} = useContext(MovieContext)
+    // const watchList =useWlByUser(user.id)
 
     const handleClose=()=>{
       setContent(<></>)
@@ -54,7 +54,7 @@ export default function MyAccount({user}) {
             <h4 style={{marginBottom:"10px"}}>Watch List<br/><hr/></h4>
             <div style={{marginBottom:"15px"}}>
                 {watchList?.map((film)=>(
-                    <p>{film.title}</p>
+                    <p key={film.id}>{film.title}</p>
                 ))}
 
             </div> 
@@ -67,7 +67,7 @@ export default function MyAccount({user}) {
             <h4 style={{marginBottom:"10px"}}>Recommend List<br/><hr/></h4>
             <div style={{marginBottom:"15px"}}>
             {recommendList?.map((movie)=>(
-                    <p>{movie.title}</p>
+                    <p key={movie.id}>{movie.title}</p>
                 ))}
             </div>
             </div>

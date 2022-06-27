@@ -1,4 +1,4 @@
-import React, {useEffect, useContext} from 'react';
+import {useEffect, useContext} from 'react';
 import apiMovie from '../api/apiMovie';
 import {CancelToken} from 'apisauce';
 import {AppContext} from '../context/AppContext';

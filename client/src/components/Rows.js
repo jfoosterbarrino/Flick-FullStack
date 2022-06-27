@@ -9,7 +9,6 @@ import useSciFi from '../hooks/useSciFi';
 import useRomance from '../hooks/useRomance';
 import {MovieContext} from '../context/MovieContext';
 import {AppContext} from '../context/AppContext';
-import useGenres from '../hooks/useGenres';
 import '../css/row.css';
 import Youtube from 'react-youtube';
 import movieTrailer from 'movie-trailer';
@@ -20,7 +19,6 @@ import Box from '@mui/material/Box';
 import Progress from './Progress';
 import apiMovie from '../api/apiMovie';
 import {CancelToken} from 'apisauce';
-import useWlByUser from '../hooks/useWlByUser';
 
 const baseUrl = "https://image.tmdb.org/t/p/original/";
 
@@ -28,7 +26,7 @@ export default function Rows() {
 
     const {topRated, setTopRated, trending, setTrending, action, 
       setAction, comedy, setComedy, horror, setHorror, drama, setDrama, sciFi, setSciFi,
-      romance,setRomance, addMovie, removeMovie} = useContext(MovieContext)
+      romance,setRomance, addMovie, removeMovie, watchList} = useContext(MovieContext)
     setTopRated(useTopRated())
     setTrending(useTrending())
     setAction(useAction())
@@ -43,15 +41,17 @@ export default function Rows() {
     const navigate = useNavigate()
     const [inList, setInList] = useState(false)
     const {user, setAlert} = useContext(AppContext)
-    const watchList = useWlByUser(user.id)
+    // const watchList = useWlByUser(user.id)
     console.log(watchList)
 
     useEffect(()=>{
       for(let film of watchList){
         if(film?.tmdb_id === movieForButton?.id || film?.id === movieForButton?.id){
           setInList(true)
+          return
         }
       }
+      setInList(false)
   },[movieForButton])
 
     const handleRemove=(movieForButton)=>{
@@ -61,6 +61,7 @@ export default function Rows() {
             const source=CancelToken.source();
             const dropMovie=async()=>{
                 const response = await apiMovie.removeMovieFromWl(user.token, movieForButton.id, source.token)
+                console.log(response)
             }
             dropMovie()
             return ()=>{source.cancel();}
@@ -73,6 +74,7 @@ export default function Rows() {
         const source=CancelToken.source();
         const createMovie=async()=>{
             const response = await apiMovie.postMovieToWl(user.token, movieForButton.id, source.token)
+            console.log(response)
         }
         createMovie()
         return ()=>{source.cancel();}
@@ -179,7 +181,7 @@ export default function Rows() {
               <img 
                   className ="row_poster"
                   key = {movie.id} 
-                  onClick= {()=>navigate(`/moviecollection/${movie.tmdb_id}`)}
+                  onClick={()=>handleClick(movie)}
                   src={`${baseUrl}${movie.poster_path}`} 
                   alt={movie.title}
                   />
@@ -229,7 +231,8 @@ export default function Rows() {
   <div className="trailer-content">
   {inList? <PurpButton onClick={()=>handleRemove(movieForButton)}>Remove From List</PurpButton>:<PurpButton onClick={()=>handleAdd(movieForButton)}>Add to Watch List</PurpButton>}
   <h1 className="trailer-title">{movieForButton?.title} Trailer</h1>
-  {movieForButton?.tmdb_id ? <BlueButton onClick={()=>navigate('/moviecollection/'+movieForButton.tmdb_id)}>More Info</BlueButton> : <BlueButton onClick={()=>navigate('/moviecollection/'+movieForButton.id)}>More Info</BlueButton>}
+   {movieForButton?.tmdb_id ? <BlueButton onClick={()=>navigate('/moviecollection/'+movieForButton.tmdb_id)}>More Info</BlueButton> :<BlueButton onClick={()=>navigate('/moviecollection/'+movieForButton.id)}>More Info</BlueButton>}
+  
   </div>
   <Youtube videoId = {trailerUrl} opts={opts}/>
   </>
