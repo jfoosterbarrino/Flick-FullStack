@@ -36,6 +36,7 @@ export default function Explore() {
 
 
     const handleClearRecommend=() => {
+        clearRecommend()
         setAlert({msg:"Recommend List has been cleared",color:"primary"})
         const source=CancelToken.source();
         const removeMovies=async()=>{
@@ -43,17 +44,18 @@ export default function Explore() {
             console.log(response)
         }
         removeMovies()
-        clearRecommend()
+        
       }
 
     const handleRemoveRecommend=(movie)=>{
+        removeMovie()
         setAlert({msg:`${movie.title} has been removed from your Recommend List`,color:"primary"})
         const source=CancelToken.source();
         const removeMovie=async()=>{
             const response = await apiMovie.removeMovieFromUser(user.token, movie.tmdb_id, source.token)
             console.log(response)
         }
-        removeMovie()
+        
         removeRecommend(movie)
         
       }
