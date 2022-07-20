@@ -49,7 +49,7 @@ export default function Banner() {
             setInList(!inList)
             const source=CancelToken.source();
             const dropMovie=async()=>{
-                const response = await apiMovie.removeMovieFromWl(user.token, movie.tmdb_id, source.token)
+                const response = await apiMovie.removeMovieFromWl(user.token, movie.id, source.token)
                 console.log(response)
 
             }
